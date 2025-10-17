@@ -1,0 +1,58 @@
+#include <iostream>
+#include <string>
+#include <map>
+#include <vector>
+#include <iomanip>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "RU");
+    string command;
+    string task_name;
+    bool active_task;
+    int count_tasks = 0;
+    double all_work_time = 0, duration;
+    int minutes = 0, hours = 0;
+
+    time_t start_time = time(nullptr);
+
+    do{
+        cout << "Enter command: "; cin >> command;
+
+        if(command == "begin"){
+            if(active_task == true){
+                active_task = false;
+
+            time_t end_time = time(nullptr);
+            duration = std::difftime(end_time, start_time);
+            all_work_time += duration;
+
+                count_tasks++;
+            }
+            cout << "Enter task name: "; cin >> task_name;
+            active_task = true;
+        }
+        else if(command == "end"){
+            active_task = false;
+            time_t end_time = time(nullptr);
+            duration = std::difftime(end_time, start_time);
+            all_work_time += duration;
+            count_tasks++;
+        }
+        else if(command == "status"){
+            if(all_work_time > 3600){
+                hours = all_work_time / 3600;
+                cout << "You have done " << count_tasks << " for " << hours << " hours" << endl;
+            }
+            else if(all_work_time > 60){
+                minutes = all_work_time / 60;
+                cout << "You have done " << count_tasks << " for " << minutes << endl;
+            }
+            else{
+                cout << "You have done " << count_tasks << " for " << all_work_time << " seconds" << endl;
+            }
+        }
+    } while(command != "exit");
+}
