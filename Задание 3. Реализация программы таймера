@@ -1,0 +1,33 @@
+#include <iostream>
+#include <iomanip>
+#include <ctime>
+#include <string>
+#include <chrono>
+#include <thread>
+#include <sstream>
+
+using namespace std;
+
+int main() {    
+    setlocale(LC_ALL, "RU");
+    int minutes, seconds;
+
+    tm startPos = {};
+
+    std::cout << "Enter time in format min-sec "; std::cin >> minutes >> seconds;
+
+    std::stringstream ss;
+    ss << minutes << "-" << seconds;
+    ss >> get_time(&startPos, "%M-%S");
+
+    int total_seconds = startPos.tm_min * 60 + startPos.tm_sec;
+    
+    std::cout << "Таймер запущен!\n";
+
+    while(total_seconds > 0){
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        total_seconds--;
+    }
+    
+    std::cout << "DING! DING! DING!\n";
+}
