@@ -1,0 +1,59 @@
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <ctime>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+int main() {    
+    setlocale(LC_ALL, "RU");    
+    string name, date;
+
+    map<string, string> dates_friend;
+
+    while(true)    
+    {        
+        cout << "Введите имя: "; cin >> name;
+
+        if(name == "end") break;
+
+        cout << "Введите дату рождения в формате ГГГГ.ММ.ДД: ";        
+
+        string input_date;       
+        cin >> input_date;
+
+        dates_friend[input_date] = name;    
+    }
+
+    time_t now = time(nullptr);
+    tm tm_now = *localtime(&now);
+
+    for(auto it = dates_friend.begin(); it != dates_friend.end(); it++){
+        tm birth = {};
+        stringstream ss;
+        ss << it->first;
+        ss >> get_time(&birth, "%Y.%m.%d");
+        tm current_year_birth = birth;
+        current_year_birth.tm_year = tm_now.tm_year;
+
+        time_t current_time = mktime(&tm_now);
+        time_t birth_time = mktime(&current_year_birth);
+
+        if (current_time > birth_time) {
+            current_year_birth.tm_year++;
+        }
+
+        time_t diff = difftime(mktime(&current_year_birth), current_time);
+        int days = static_cast<int>(diff / (60 * 60 * 24));
+
+        if (days == 0) {
+            cout << it->second << " празднует день рождения сегодня!\n";
+        } else {
+            cout << it->second << " будет праздновать день рождения через " << days << " дней\n";
+        }
+    
+    }
+
+}
